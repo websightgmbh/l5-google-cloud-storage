@@ -15,7 +15,7 @@ use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
  * Class CloudStorageServiceProvider
  * Configures Google Cloud Storage Access for flysystem
  *
- * @package App\Providers
+ * @package Websight\GcsProvider
  */
 class CloudStorageServiceProvider extends ServiceProvider
 {
