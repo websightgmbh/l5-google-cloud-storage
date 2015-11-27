@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Websight\\": "src/Websight"
+            "Websight\\GcsProvider\\": "src/Websight/GcsProvider/"
         }
     }
 }
