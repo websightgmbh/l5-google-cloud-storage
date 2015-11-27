@@ -36,8 +36,15 @@ Websight\GcsProvider\CloudStorageServiceProvider::class,
 Use it like any other Flysystem Adapter with the ``Storage``-Facade.
 
 ```php
-// Put a file up
+// Put a private file on the 'gcs' disk which is a Google Cloud Storage bucket
 Storage::disk('gcs')->put('test.png', file_get_contents(storage_path('/app/test.png')));
+
+// Put a public-accessible file on the 'gcs' disk which is a Google Cloud Storage bucket
+Storage::disk('gcs')->put(
+    'test-public.png',
+    file_get_contents(storage_path('/app/test-public.png')),
+    \Illuminate\Contracts\Filesystem\Filesystem::VISIBILITY_PUBLIC
+);
 
 // Retrieve a file
 $file = Storage::disk('gcs')->get('test.png');
