@@ -31,7 +31,7 @@ class CloudStorageServiceProvider extends ServiceProvider
                 $credentials = new Google_Auth_AssertionCredentials(
                     $config['service_account'],
                     [
-                        Google_Service_Storage::DEVSTORAGE_READ_WRITE
+                        Google_Service_Storage::DEVSTORAGE_FULL_CONTROL
                     ],
                     file_get_contents($config['service_account_certificate']),
                     $config['service_account_certificate_password']
