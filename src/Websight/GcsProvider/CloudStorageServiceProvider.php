@@ -27,26 +27,22 @@ class CloudStorageServiceProvider extends ServiceProvider
     public function boot()
     {
         Storage::extend('gcs', function ($app, $config) {
-            try {
-                $credentials = new Google_Auth_AssertionCredentials(
-                    $config['service_account'],
-                    [
-                        Google_Service_Storage::DEVSTORAGE_FULL_CONTROL
-                    ],
-                    file_get_contents($config['service_account_certificate']),
-                    $config['service_account_certificate_password']
-                );
+            $credentials = new Google_Auth_AssertionCredentials(
+                $config['service_account'],
+                [
+                    Google_Service_Storage::DEVSTORAGE_FULL_CONTROL
+                ],
+                file_get_contents($config['service_account_certificate']),
+                $config['service_account_certificate_password']
+            );
 
-                $client = new Google_Client();
-                $client->setAssertionCredentials($credentials);
+            $client = new Google_Client();
+            $client->setAssertionCredentials($credentials);
 
-                $service = new Google_Service_Storage($client);
-                $adapter = new GoogleStorageAdapter($service, $config['bucket']);
+            $service = new Google_Service_Storage($client);
+            $adapter = new GoogleStorageAdapter($service, $config['bucket']);
 
-                return new Filesystem($adapter);
-            } catch (ErrorException $e) {
-                throw new ErrorException("GCS Flysystem adapter is not configured correctly.");
-            }
+            return new Filesystem($adapter);
         });
     }
 
