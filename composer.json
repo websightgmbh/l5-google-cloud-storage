@@ -18,5 +18,10 @@
         "psr-4": {
             "Websight\\GcsProvider\\": "src/Websight/GcsProvider/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
     }
 }
