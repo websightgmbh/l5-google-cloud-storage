@@ -2,14 +2,10 @@
 
 namespace Websight\GcsProvider;
 
-use ErrorException;
-use Google_Auth_AssertionCredentials;
-use Google_Client;
-use Google_Service_Storage;
+use CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
 use Storage;
-use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 
 /**
  * Class CloudStorageServiceProvider
@@ -20,36 +16,19 @@ use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 class CloudStorageServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function boot()
     {
         Storage::extend('gcs', function ($app, $config) {
-            $credentials = new Google_Auth_AssertionCredentials(
-                $config['service_account'],
-                [
-                    Google_Service_Storage::DEVSTORAGE_FULL_CONTROL
-                ],
-                file_get_contents($config['service_account_certificate']),
-                $config['service_account_certificate_password']
-            );
-
-            $client = new Google_Client();
-            $client->setAssertionCredentials($credentials);
-
-            $service = new Google_Service_Storage($client);
-            $adapter = new GoogleStorageAdapter($service, $config['bucket']);
+            $adapter = new GoogleCloudStorageAdapter(null, ['bucket' => $config['bucket']]);
 
             return new Filesystem($adapter);
         });
     }
 
     /**
-     * Register the application services.
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function register()
     {
