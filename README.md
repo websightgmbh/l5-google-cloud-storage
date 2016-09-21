@@ -11,31 +11,36 @@ If you rely on it, please use the `1.x` versions.
 
 ## Configuration
 
-1a. Obtain json service account credentials of a dedicated CloudPlatform Service Account
+*Dedicated credentials:* Obtain json service account credentials of a dedicated CloudPlatform Service Account
+
 **or**
-1b. Log in locally on your machine through the `gcloud` command-line
-    utility.
-2. Add the service provider to your application in ``config/app.php``
+
+*Local authentication through gcloud:* Log in locally on your machine through the `gcloud` command-line
+utility.
+
+* Add the service provider to your application in ``config/app.php``
    ```php
    Websight\GcsProvider\CloudStorageServiceProvider::class,
    ```
-3. Add a disk to the `disks` array in config/filesystems.php
-   ```php
-   'gcs' => [
-       // Select the Google Cloud Storage Disk
-       'driver'         => 'gcs',
-       // OPTIONAL: The location of the json service account certificate, see below
-       // 'credentials' => storage_path('my-service-account-credentials.json'),
-       // OPTIONAL: The GCP project id, see below
-       // 'project_id'  => 'my-project-id-4711',
-       // The bucket you want this disk to point at
-       'bucket'         => 'my-project-id-4711.appspot.com',
-   ],
-   ```
-   If Google Cloud Storage is the only `cloud` disk, you may consider
-   setting it as the `cloud` disk, so that you can access it like
-   `Storage::cloud()->$operation()` via `'cloud' => 's3',` in the `filesystems.php`
-   config file.
+   
+* Add a disk to the `disks` array in config/filesystems.php
+  ```php
+  'gcs' => [
+      // Select the Google Cloud Storage Disk
+      'driver'         => 'gcs',
+      // OPTIONAL: The location of the json service account certificate, see below
+      // 'credentials' => storage_path('my-service-account-credentials.json'),
+      // OPTIONAL: The GCP project id, see below
+      // 'project_id'  => 'my-project-id-4711',
+      // The bucket you want this disk to point at
+      'bucket'         => 'my-project-id-4711.appspot.com',
+  ],
+  ```
+   
+* If Google Cloud Storage is the only `cloud` disk, you may consider
+  setting it as the `cloud` disk, so that you can access it like
+  `Storage::cloud()->$operation()` via `'cloud' => 's3',` in the `filesystems.php`
+  config file.
    
 ## Authentication and the different configuration options
 
