@@ -2,51 +2,87 @@
 
 [![Latest Stable Version](https://poser.pugx.org/websight/l5-google-cloud-storage/v/stable)](https://packagist.org/packages/websight/l5-google-cloud-storage) [![Total Downloads](https://poser.pugx.org/websight/l5-google-cloud-storage/downloads)](https://packagist.org/packages/websight/l5-google-cloud-storage) [![Latest Unstable Version](https://poser.pugx.org/websight/l5-google-cloud-storage/v/unstable)](https://packagist.org/packages/websight/l5-google-cloud-storage) [![License](https://poser.pugx.org/websight/l5-google-cloud-storage/license)](https://packagist.org/packages/websight/l5-google-cloud-storage)
 
-Wraps [superbalist/flysystem-google-storage](https://github.com/Superbalist/flysystem-google-storage) in a Laravel 5.x
+Wraps [cedricziel/flysystem-gcs](https://github.com/cedricziel/flysystem-gcs) in a Laravel 5.x
 compatible Service Provider.
 
 **Note:**
-If you want to use json credentials, checkout [cedricziel/flysystem-gcs](https://github.com/cedricziel/flysystem-gcs), which is a rewrite on top of the idiomatic [google/cloud](https://github.com/GoogleCloudPlatform/google-cloud-php) package. The README contains an example on how to use it with Laravel 5.
+This project doesn't support the deprecated `p12` credentials format anymore.
+If you rely on it, please use the `1.x` versions.
 
 ## Configuration
 
-1. Obtain the p12 certificate of a dedicated CloudPlatform Service Account
+1a. Obtain json service account credentials of a dedicated CloudPlatform Service Account
+**or**
+1b. Log in locally on your machine through the `gcloud` command-line
+    utility.
 2. Add the service provider to your application in ``config/app.php``
    ```php
    Websight\GcsProvider\CloudStorageServiceProvider::class,
    ```
-
-3. Add a disk to config/filesystems.php
+3. Add a disk to the `disks` array in config/filesystems.php
    ```php
    'gcs' => [
        // Select the Google Cloud Storage Disk
-       'driver'                               => 'gcs',
-       // The location of the p12 service account certificate
-       'service_account_certificate'          => storage_path() . '/credentials.p12',
-       // The password you will be given when creating the service account
-       'service_account_certificate_password' => 'yourpassword',
+       'driver'         => 'gcs',
+       // OPTIONAL: The location of the json service account certificate, see below
+       // 'credentials' => storage_path('my-service-account-credentials.json'),
+       // OPTIONAL: The GCP project id, see below
+       // 'project_id'  => 'my-project-id-4711',
        // The bucket you want this disk to point at
-       'bucket'                               => 'cloud-storage-bucket',
+       'bucket'         => 'my-project-id-4711.appspot.com',
    ],
    ```
+   If Google Cloud Storage is the only `cloud` disk, you may consider
+   setting it as the `cloud` disk, so that you can access it like
+   `Storage::cloud()->$operation()` via `'cloud' => 's3',` in the `filesystems.php`
+   config file.
+   
+## Authentication and the different configuration options
+
+Google Cloud Platform uses json credential files. For the use-case of this library,
+there are two different types that can easily confuse you.
+
+1. credentials type `user`
+   This is the type of credentials that identifies you as a user entity,
+   most likely when authenticated through the `gcloud` utility.
+   Since this type of credentials identifies users and users can belong
+   to more than one project, you need to specify the `project_id` config option.
+   The keys should automatically be detected through their well-known location.
+2. credentials type `service_account`
+   Service Account credentials are for authorizing machines and / or individual
+   services to Google Cloud Platform. AppEngine instances and GCE machines
+   already have a service account pre-installed so you don't need to configure
+   neither `project_id` not `credentials`, since service accounts carry the information
+   to which project they belong.
+
+### When do I need to configure which option?
+
+| Location                                | `project_id`             | `credentials`            | `bucket`        |
+|-----------------------------------------|--------------------------|--------------------------|-----------------|
+| AppEngine (Standard & Flex)             | *detected automatically* | *detected automatically* | needs to be set |
+| Deployment to non-GCP machine           | needs to be set          | needs to be set          | needs to be set |
+| Local development with user credentials | needs to be set          | *detected automatically* | needs to be set |
+| Local development with service account  | *detected automatically* | needs to be set          | needs to be set |
 
 ## Usage
 
 Use it like any other Flysystem Adapter with the ``Storage``-Facade.
 
 ```php
+$disk = Storage::disk('gcs');
+
 // Put a private file on the 'gcs' disk which is a Google Cloud Storage bucket
-Storage::disk('gcs')->put('test.png', file_get_contents(storage_path('/app/test.png')));
+$disk->put('test.png', file_get_contents(storage_path('app/test.png')));
 
 // Put a public-accessible file on the 'gcs' disk which is a Google Cloud Storage bucket
-Storage::disk('gcs')->put(
+$disk->put(
     'test-public.png',
-    file_get_contents(storage_path('/app/test-public.png')),
+    file_get_contents(storage_path('app/test-public.png')),
     \Illuminate\Contracts\Filesystem\Filesystem::VISIBILITY_PUBLIC
 );
 
 // Retrieve a file
-$file = Storage::disk('gcs')->get('test.png');
+$file = $disk->get('test.png');
 ```
 
 ## License (MIT)
