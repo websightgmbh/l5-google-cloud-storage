@@ -2,7 +2,7 @@
     "name": "websight/l5-google-cloud-storage",
     "description": "Laravel 5 Flysystem Google Cloud Storage  Service Provider",
     "require": {
-        "illuminate/support": "~5.0.17|5.1.*|5.2.*",
+        "illuminate/support": "~5.0.17|5.1.*|5.2.*|5.3.*",
         "superbalist/flysystem-google-storage": "^1.0"
     },
     "keywords": ["laravel", "laravel5", "flysystem"],
