@@ -2,8 +2,11 @@
 
 [![Latest Stable Version](https://poser.pugx.org/websight/l5-google-cloud-storage/v/stable)](https://packagist.org/packages/websight/l5-google-cloud-storage) [![Total Downloads](https://poser.pugx.org/websight/l5-google-cloud-storage/downloads)](https://packagist.org/packages/websight/l5-google-cloud-storage) [![Latest Unstable Version](https://poser.pugx.org/websight/l5-google-cloud-storage/v/unstable)](https://packagist.org/packages/websight/l5-google-cloud-storage) [![License](https://poser.pugx.org/websight/l5-google-cloud-storage/license)](https://packagist.org/packages/websight/l5-google-cloud-storage)
 
-Wraps [superbalist/flysystem-google-storage](https://github.com/Superbalist/flysystem-google-storage) in a Laravel 5 / 5.1 compatible
-Service Provider.
+Wraps [superbalist/flysystem-google-storage](https://github.com/Superbalist/flysystem-google-storage) in a Laravel 5.x
+compatible Service Provider.
+
+**Note:**
+If you want to use json credentials, checkout [cedricziel/flysystem-gcs](https://github.com/cedricziel/flysystem-gcs), which is a rewrite on top of the idiomatic [google/cloud](https://github.com/GoogleCloudPlatform/google-cloud-php) package. The README contains an example on how to use it with Laravel 5.
 
 ## Configuration
 
