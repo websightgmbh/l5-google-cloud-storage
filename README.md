@@ -39,7 +39,7 @@ utility.
    
 * If Google Cloud Storage is the only `cloud` disk, you may consider
   setting it as the `cloud` disk, so that you can access it like
-  `Storage::cloud()->$operation()` via `'cloud' => 's3',` in the `filesystems.php`
+  `Storage::cloud()->$operation()` via `'cloud' => 'gcs',` in the `filesystems.php`
   config file.
    
 ## Authentication and the different configuration options
