@@ -52,7 +52,21 @@ class CloudStorageServiceProvider extends ServiceProvider
     public function register()
     {
         if (!$this->app->has('filesystem')) {
-            $this->app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+            $this->app->singleton('filesystem', function ($app) {
+                /** @var \Laravel\Lumen\Application $app */
+                return $app->loadComponent(
+                    'filesystems',
+                    \Illuminate\Filesystem\FilesystemServiceProvider::class,
+                    'filesystem'
+                );
+            });
+
+            $this->app->singleton(
+                \Illuminate\Contracts\Filesystem\Factory::class,
+                function ($app) {
+                    return new \Illuminate\Filesystem\FilesystemManager($app);
+                }
+            );
         }
 
         $this->registerFacades();
