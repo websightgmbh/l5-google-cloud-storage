@@ -43,4 +43,40 @@ class CloudStorageServiceProvider extends ServiceProvider
             return new Filesystem($adapter);
         });
     }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        if (!$this->app->has('filesystem')) {
+            $this->app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+        }
+
+        $this->registerFacades();
+    }
+
+    /**
+     * Register Storage facade.
+     *
+     * @return void
+     */
+    protected function registerFacades()
+    {
+        if (!class_exists('Storage')) {
+            class_alias(\Illuminate\Support\Facades\Storage::class, 'Storage');
+        }
+    }
+
+    /**
+     * Decides wheter the current app is lumen.
+     *
+     * @return bool
+     */
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen');
+    }
 }
