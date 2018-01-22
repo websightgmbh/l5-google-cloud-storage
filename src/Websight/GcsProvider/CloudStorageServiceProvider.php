@@ -3,7 +3,7 @@
 namespace Websight\GcsProvider;
 
 use CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter;
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Storage\StorageClient;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
 use Storage;
@@ -35,7 +35,7 @@ class CloudStorageServiceProvider extends ServiceProvider
 
             if (array_key_exists('credentials', $config) && false === empty($config['credentials'])) {
                 $serviceBuilderConfig += ['keyFilePath' => $config['credentials']];
-                $optionalServiceBuilder = new ServiceBuilder($serviceBuilderConfig);
+                $optionalServiceBuilder = new StorageClient($serviceBuilderConfig);
             }
 
             $adapter = new GoogleCloudStorageAdapter($optionalServiceBuilder, $adapterConfiguration);
