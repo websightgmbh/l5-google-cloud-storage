@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./vendor/autoload.php" colors="true" forceCoversAnnotation="false">
+    <testsuites>
+        <testsuite name="lumen-support test suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter processUncoveredFilesFromWhitelist="true">
+        <whitelist>
+            <directory suffix=".php">src</directory>
+            <exclude>
+                <directory>tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

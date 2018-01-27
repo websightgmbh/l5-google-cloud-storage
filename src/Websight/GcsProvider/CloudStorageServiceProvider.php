@@ -3,7 +3,7 @@
 namespace Websight\GcsProvider;
 
 use CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter;
-use Google\Cloud\ServiceBuilder;
+use Google\Cloud\Storage\StorageClient;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
 use Storage;
@@ -35,12 +35,62 @@ class CloudStorageServiceProvider extends ServiceProvider
 
             if (array_key_exists('credentials', $config) && false === empty($config['credentials'])) {
                 $serviceBuilderConfig += ['keyFilePath' => $config['credentials']];
-                $optionalServiceBuilder = new ServiceBuilder($serviceBuilderConfig);
+                $optionalServiceBuilder = new StorageClient($serviceBuilderConfig);
             }
 
             $adapter = new GoogleCloudStorageAdapter($optionalServiceBuilder, $adapterConfiguration);
 
             return new Filesystem($adapter);
         });
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        if (!$this->app->has('filesystem')) {
+            $this->app->singleton('filesystem', function ($app) {
+                /** @var \Laravel\Lumen\Application $app */
+                return $app->loadComponent(
+                    'filesystems',
+                    \Illuminate\Filesystem\FilesystemServiceProvider::class,
+                    'filesystem'
+                );
+            });
+
+            $this->app->singleton(
+                \Illuminate\Contracts\Filesystem\Factory::class,
+                function ($app) {
+                    return new \Illuminate\Filesystem\FilesystemManager($app);
+                }
+            );
+        }
+
+        $this->registerFacades();
+    }
+
+    /**
+     * Register Storage facade.
+     *
+     * @return void
+     */
+    protected function registerFacades()
+    {
+        if (!class_exists('Storage')) {
+            class_alias(\Illuminate\Support\Facades\Storage::class, 'Storage');
+        }
+    }
+
+    /**
+     * Decides wheter the current app is lumen.
+     *
+     * @return bool
+     */
+    protected function isLumen()
+    {
+        return str_contains($this->app->version(), 'Lumen');
     }
 }
