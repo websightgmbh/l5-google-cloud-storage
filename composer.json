@@ -23,7 +23,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "Websight\\GcsProvider\\": "src/",
+            "Websight\\GcsProvider\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Websight\\GcsProvider\\Tests\\": "tests/"
         }
     },
