@@ -51,7 +51,7 @@ class CloudStorageServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (!$this->app->has('filesystem')) {
+        if ($this->isLumen() && !$this->app->has('filesystem')) {
             $this->app->singleton('filesystem', function ($app) {
                 /** @var \Laravel\Lumen\Application $app */
                 return $app->loadComponent(
@@ -85,7 +85,7 @@ class CloudStorageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Decides wheter the current app is lumen.
+     * Decides whether the current app is lumen.
      *
      * @return bool
      */
