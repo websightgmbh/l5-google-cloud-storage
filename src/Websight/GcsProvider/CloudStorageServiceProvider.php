@@ -5,6 +5,7 @@ namespace Websight\GcsProvider;
 use ErrorException;
 use Google_Auth_AssertionCredentials;
 use Google_Client;
+use Google_Config;
 use Google_Service_Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
@@ -35,8 +36,13 @@ class CloudStorageServiceProvider extends ServiceProvider
                 file_get_contents($config['service_account_certificate']),
                 $config['service_account_certificate_password']
             );
-
-            $client = new Google_Client();
+            if(!empty($config['tmp_path']) && file_exists($config['tmp_path'])) {
+                $clientConfig = new Google_Config();
+                $clientConfig->setClassConfig('Google_Cache_File', array('directory' => $config['tmp_path']));
+                $client = new Google_Client($clientConfig);
+            } else {
+                $client = new Google_Client();
+            }
             $client->setAssertionCredentials($credentials);
 
             $service = new Google_Service_Storage($client);

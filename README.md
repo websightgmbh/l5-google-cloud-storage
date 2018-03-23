@@ -29,6 +29,8 @@ If you want to use json credentials, checkout [cedricziel/flysystem-gcs](https:/
        'service_account_certificate_password' => 'yourpassword',
        // The bucket you want this disk to point at
        'bucket'                               => 'cloud-storage-bucket',
+       // Optional, path to store temp files, defaults to system temp folder
+       'tmp_path'                             => '',
    ],
    ```
 
